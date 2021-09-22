@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: immudb
+  labels:
+    app: immudb
+data:
+  primary.cnf: |
+    # Apply this config only on the primary.
+    [immudbserv] 
+    log-bin
+  replica.cnf: |
+    # Apply this config only on replicas.
+    [immudbserv]
+    super-read-only    
+  immudb.toml: |
+    # Apply this config for immudb replication follower
+    replication-enabled = true
+    replication-master-address="127.0.0.1"
+    replication-master-port=3322 
+    replication-follower-username="immudb"
+    replication-follower-password="immudb"
+    port=3334
+    pgsql-server-port=5434
+    dir="./data-replica"
+    network = "tcp"
+    address = "0.0.0.0"
+    pidfile = ""
+    logfile = ""
+    mtls = false
+    detached = false
+    auth = true
+    no-histograms = false
+    consistency-check = true
+    pkey = ""
+    certificate = ""
+    clientcas = ""
+    devmode = true
+    maintenance = false
+    signingKey = ""
+    token-expiry-time = 1440 # client authentication token expiration time. Minutes
+    pgsql-server = true # enable or disable pgsql server   
