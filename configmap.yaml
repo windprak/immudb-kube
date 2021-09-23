@@ -6,17 +6,58 @@ metadata:
     app: immudb
 data:
   primary.cnf: |
-    # Apply this config only on the primary.
-    [immudbserv] 
-    log-bin
+    dir = "./data/master"
+    network = "tcp"
+    address = "0.0.0.0"
+    port = 3322
+    dbname = "immudb"
+    pidfile = ""
+    logfile = ""
+    mtls = false
+    detached = false
+    auth = true
+    no-histograms = false
+    consistency-check = true
+    pkey = ""
+    certificate = ""
+    clientcas = ""
+    devmode = true
+    admin-password = "immudb" # this password is only used once to initialize immudb and can be ignored
+    maintenance = false
+    signingKey = ""
+    token-expiry-time = 1440 # client authentication token expiration time. Minutes
+    pgsql-server = true # enable or disable pgsql server
+    pgsql-server-port = 5432  
   replica.cnf: |
-    # Apply this config only on replicas.
-    [immudbserv]
-    super-read-only    
+    replication-enabled = true
+    replication-master-address="immudb-0.immudb"
+    replication-master-port=3322 
+    replication-follower-username="immudb"
+    replication-follower-password="immudb"
+    port=3334
+    pgsql-server-port=5434
+    dir="./data/replica"
+    network = "tcp"
+    address = "0.0.0.0"
+    pidfile = ""
+    logfile = ""
+    mtls = false
+    detached = false
+    auth = true
+    no-histograms = false
+    consistency-check = true
+    pkey = ""
+    certificate = ""
+    clientcas = ""
+    devmode = true
+    maintenance = false
+    signingKey = ""
+    token-expiry-time = 1440 # client authentication token expiration time. Minutes
+    pgsql-server = true # enable or disable pgsql server   
   immudb.toml: |
     # Apply this config for immudb replication follower
     replication-enabled = true
-    replication-master-address="127.0.0.1"
+    replication-master-address="immudb-0.immudb"
     replication-master-port=3322 
     replication-follower-username="immudb"
     replication-follower-password="immudb"
