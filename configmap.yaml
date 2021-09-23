@@ -53,7 +53,8 @@ data:
     maintenance = false
     signingKey = ""
     token-expiry-time = 1440 # client authentication token expiration time. Minutes
-    pgsql-server = true # enable or disable pgsql server   
+    pgsql-server = true # enable or disable pgsql server
+    web-server-port = 9090   
   immudb.toml: |
     # Apply this config for immudb replication follower
     replication-enabled = true
