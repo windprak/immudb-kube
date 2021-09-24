@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: immudb
   serviceName: immudb
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
@@ -24,13 +24,8 @@ spec:
           # Generate immudb server-id from pod ordinal index.
           [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
-          #echo [immudbserv] > /mnt/conf.d/server-id.cnf
-          # Add an offset to avoid reserved server-id=0 value.
-          #echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy appropriate conf.d files from config-map to emptyDir.
           if [[ $ordinal -eq 0 ]]; then
             cp /mnt/config-map/primary.cnf /mnt/configs/immudb.toml
-            cat /mnt/configs/immudb.toml
           else
             cp /mnt/config-map/replica.cnf /mnt/configs/immudb.toml
           fi          
@@ -38,17 +33,12 @@ spec:
         - name: conf
           mountPath: /mnt/configs
           subPath: immudb.toml
-        #- name: conf
-        #  mountPath: /mnt/configs
-        #  subPath: immudb.toml
         - name: config-map
           mountPath: /mnt/config-map
       containers:
       - name: immudb
         image: codenotary/immudb:latest-bullseye-slim
-        #command: ["immudb"]
         command: ["immudb","--config","/mnt/configs/immudb.toml"]
-        #args: ["--config='/mnt/configs/immudb.toml'"]
         env:
         - name: IMMU_ADMIN_PASSWORD
           value: "secret"
@@ -57,19 +47,20 @@ spec:
           containerPort: 3322
         - name: immudbweb
           containerPort: 8080
+        - name: immudbrepbweb
+          containerPort: 9090
         volumeMounts:
         - name: data
           mountPath: /data/master
         - name: data
           mountPath: /data/replica
-        #- name: immudb-config-vol
-        ##  mountPath: /mnt/configs
-          subPath: immudb.toml
         - name: conf
           mountPath: /mnt/configs
           subPath: immudb.toml
       volumes:
       - name: conf
+        emptyDir: {} 
+      - name: scripts
         emptyDir: {} 
       - name: config-map
         configMap:

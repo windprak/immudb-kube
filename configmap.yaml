@@ -22,7 +22,7 @@ data:
     certificate = ""
     clientcas = ""
     devmode = true
-    admin-password = "immudb" # this password is only used once to initialize immudb and can be ignored
+    admin-password = "servmode" # this password is only used once to initialize immudb and can be ignored
     maintenance = false
     signingKey = ""
     token-expiry-time = 1440 # client authentication token expiration time. Minutes
@@ -55,30 +55,3 @@ data:
     token-expiry-time = 1440 # client authentication token expiration time. Minutes
     pgsql-server = true # enable or disable pgsql server
     web-server-port = 9090   
-  immudb.toml: |
-    # Apply this config for immudb replication follower
-    replication-enabled = true
-    replication-master-address="immudb-0.immudb"
-    replication-master-port=3322 
-    replication-follower-username="immudb"
-    replication-follower-password="immudb"
-    port=3334
-    pgsql-server-port=5434
-    dir="./data-replica"
-    network = "tcp"
-    address = "0.0.0.0"
-    pidfile = ""
-    logfile = ""
-    mtls = false
-    detached = false
-    auth = true
-    no-histograms = false
-    consistency-check = true
-    pkey = ""
-    certificate = ""
-    clientcas = ""
-    devmode = true
-    maintenance = false
-    signingKey = ""
-    token-expiry-time = 1440 # client authentication token expiration time. Minutes
-    pgsql-server = true # enable or disable pgsql server   

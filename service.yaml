@@ -13,21 +13,6 @@ spec:
   selector:
     app: immudb
 ---
-# Headless service for stable DNS entries of StatefulSet members.
-apiVersion: v1
-kind: Service
-metadata:
-  name: immudb-webserver
-  labels:
-    app: immudb
-spec:
-  ports:
-  - name: immudb
-    port: 8080
-  clusterIP: None
-  selector:
-    app: immudb
----
 # Client service for connecting to any immudb instance for reads.
 # For writes, you must instead connect to the primary: immudb-0.immudb.
 apiVersion: v1
@@ -40,6 +25,20 @@ spec:
   ports:
   - name: immudb
     port: 3322
+  selector:
+    app: immudb
+---
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+  name: immudb-webserver
+  labels:
+    app: immudb
+spec:
+  ports:
+  - name: immudb
+    port: 9090
   selector:
     app: immudb
 ---
